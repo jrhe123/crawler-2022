@@ -1,5 +1,5 @@
 abstract class Geo {
-  width: number;
+  private width: number = 123;
   getType() {
     return "implemented method";
   }

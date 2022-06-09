@@ -7,7 +7,18 @@
     "test": "test"
   },
   "scripts": {
-    "dev": "ts-node ./src/crawler.ts"
+    "start": "ts-node ./src/crawler.ts",
+    "build": "tsc",
+    "dev:watch-build": "tsc -w",
+    "dev:test": "nodemon node ./build/src/crawler.js",
+    "dev": "concurrently npm run dev:watch-build & npm run dev:test",
+    "dev-2": "concurrently npm:dev:*"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "data/*"
+    ],
+    "delay": "2500"
   },
   "repository": {
     "type": "git",
@@ -23,6 +34,8 @@
   "devDependencies": {
     "@types/cheerio": "^0.22.31",
     "@types/superagent": "^4.1.15",
+    "concurrently": "^7.2.1",
+    "nodemon": "^2.0.16",
     "ts-node": "^10.8.1",
     "typescript": "^4.7.3"
   },
