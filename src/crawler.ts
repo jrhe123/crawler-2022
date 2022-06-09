@@ -35,7 +35,7 @@ class Crawler {
 //
 const secret = "this is my super secret";
 const url = `https://laminasolutions.com/services?secure=${secret}`;
-const analyzer = new Analyzer();
+const analyzer = Analyzer.getInstance();
 const crawler = new Crawler(
   url,
   analyzer,

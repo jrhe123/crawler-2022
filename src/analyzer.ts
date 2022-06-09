@@ -18,6 +18,8 @@ export interface Content {
 }
 
 export default class Analyzer implements IAnalyzer {
+  private static instance: Analyzer;
+
   private getTargetInfo(html: string) {
     const courses: Course[] = [];
     // cheerio jquery search
@@ -55,5 +57,14 @@ export default class Analyzer implements IAnalyzer {
     const items = this.getTargetInfo(html);
     const fileContent = this.generateJsonContent(items, filePath);
     return JSON.stringify(fileContent);
+  }
+
+  private constructor() {}
+
+  static getInstance() {
+    if (!this.instance) {
+      this.instance = new Analyzer();
+    }
+    return this.instance;
   }
 }
