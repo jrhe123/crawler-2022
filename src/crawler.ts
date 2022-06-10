@@ -1,7 +1,5 @@
 import fs from "fs";
-import path from "path";
 import superagent from "superagent";
-import Analyzer from "./analyzer";
 
 export interface IAnalyzer {
   analyze: (html: string, filePath: string) => string;
@@ -32,12 +30,4 @@ class Crawler {
   }
 }
 
-//
-const secret = "this is my super secret";
-const url = `https://laminasolutions.com/services?secure=${secret}`;
-const analyzer = Analyzer.getInstance();
-const crawler = new Crawler(
-  url,
-  analyzer,
-  path.resolve(__dirname, "../data/course.json")
-);
+export default Crawler;

@@ -17,7 +17,7 @@ export interface Content {
   [propName: number]: Course[];
 }
 
-export default class Analyzer implements IAnalyzer {
+class Analyzer implements IAnalyzer {
   private static instance: Analyzer;
 
   private getTargetInfo(html: string) {
@@ -68,3 +68,5 @@ export default class Analyzer implements IAnalyzer {
     return this.instance;
   }
 }
+
+export default Analyzer;
