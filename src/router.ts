@@ -1,8 +1,10 @@
 import { Router, Request, Response } from "express";
 import path from "path";
 
-import Crawler from "./crawler";
-import Analyzer from "./analyzer";
+import Crawler from "./utils/crawler";
+import Analyzer from "./utils/analyzer";
+
+import { getResponseData } from "./utils/util";
 
 const router = Router();
 
@@ -16,19 +18,13 @@ router.post("/login", (req: RequestWithBody, res: Response) => {
   const { password, username } = req.body;
   const isLogin = req.session ? req.session.login : false;
   if (isLogin) {
-    return res.json({
-      msg: "logged in",
-    });
+    return res.json(getResponseData(true));
   }
   if (password === "123456" && req.session) {
     req.session.login = true;
-    return res.json({
-      msg: "logged in",
-    });
+    return res.json(getResponseData(true));
   } else {
-    return res.json({
-      msg: "login error",
-    });
+    return res.json(getResponseData(false, "login error"));
   }
 });
 
@@ -36,9 +32,7 @@ router.get("/logout", (req: RequestWithBody, res: Response) => {
   if (req.session && req.session.login) {
     req.session.login = false;
   }
-  return res.json({
-    msg: "logout",
-  });
+  return res.json(getResponseData(true));
 });
 
 router.post("/", (req: RequestWithBody, res: Response) => {
@@ -50,9 +44,7 @@ router.post("/", (req: RequestWithBody, res: Response) => {
     analyzer,
     path.resolve(__dirname, "../data/course.json")
   );
-  return res.json({
-    msg: "ok",
-  });
+  return res.json(getResponseData(true));
 });
 
 export default router;
