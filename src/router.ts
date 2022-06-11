@@ -8,7 +8,7 @@ import { getResponseData } from "./utils/util";
 
 const router = Router();
 
-interface RequestWithBody extends Request {
+export interface RequestWithBody extends Request {
   body: {
     [key: string]: string | undefined;
   };
