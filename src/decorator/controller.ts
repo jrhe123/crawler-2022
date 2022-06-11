@@ -1,17 +1,19 @@
+import { RequestHandler } from "express";
 import { router } from "../router";
-
-enum Mehods {
-  get = "get",
-  post = "post",
-  put = "put",
-  delete = "delete",
-}
-
-export function controller(target: any) {
+import { Mehods } from "./request";
+/**
+ *
+ * @param target : constructor method
+ */
+export function controller(target: new (...args: any[]) => any) {
   for (let key in target.prototype) {
-    const path = Reflect.getMetadata("path", target.prototype, key);
+    const path: string = Reflect.getMetadata("path", target.prototype, key);
     const method: Mehods = Reflect.getMetadata("method", target.prototype, key);
-    const middleware = Reflect.getMetadata("middleware", target.prototype, key);
+    const middleware: RequestHandler = Reflect.getMetadata(
+      "middleware",
+      target.prototype,
+      key
+    );
     const handler = target.prototype[key];
     /**
      * path: "/", "/login", etc..

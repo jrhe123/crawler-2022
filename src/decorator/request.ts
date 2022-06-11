@@ -1,12 +1,19 @@
-enum Mehods {
+import { CrawlerController, LoginController } from "../controller";
+type controller = CrawlerController | LoginController;
+
+export enum Mehods {
   get = "get",
   post = "post",
   put = "put",
   delete = "delete",
 }
+/**
+ *
+ * @param target : controller
+ */
 function getRequestDecorator(type: Mehods) {
   return function (path: string) {
-    return function (target: any, key: string) {
+    return function (target: controller, key: string) {
       Reflect.defineMetadata("path", path, target, key);
       Reflect.defineMetadata("method", type, target, key);
     };

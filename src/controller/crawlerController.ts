@@ -27,7 +27,7 @@ const checkLogin = (req: Request, res: Response, next: NextFunction) => {
 };
 
 @controller
-class CrawlerController {
+export class CrawlerController {
   @get("/test")
   @use(checkLogin)
   index(req: RequestWithBody, res: Response) {

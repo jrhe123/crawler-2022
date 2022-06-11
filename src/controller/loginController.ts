@@ -11,7 +11,7 @@ interface RequestWithBody extends Request {
 }
 
 @controller
-class LoginController {
+export class LoginController {
   static isLogin(req: RequestWithBody): boolean {
     const isLogin = req.session ? req.session.login : false;
     return !!isLogin;
