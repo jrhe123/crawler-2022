@@ -1,4 +1,4 @@
-function testDecorator() {
+function testDecorator2() {
   return function <T extends new (...args: any[]) => any>(constructor: T) {
     return class extends constructor {
       name = "roytest";
@@ -9,7 +9,7 @@ function testDecorator() {
   };
 }
 
-const Test = testDecorator()(
+const Test2 = testDecorator2()(
   class {
     name: string;
     constructor(name: string) {
@@ -18,5 +18,5 @@ const Test = testDecorator()(
   }
 );
 
-const test = new Test("abc");
-console.log("get name: ", test.getName());
+const test2 = new Test2("abc");
+console.log("get name: ", test2.getName());
