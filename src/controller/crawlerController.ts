@@ -18,7 +18,7 @@ interface RequestWithBody extends Request {
  * Middleware: check login or not
  */
 const checkLogin = (req: Request, res: Response, next: NextFunction) => {
-  const isLogin = req.session ? req.session.login : false;
+  const isLogin = !!(req.session ? req.session.login : false);
   if (isLogin) {
     next();
   } else {

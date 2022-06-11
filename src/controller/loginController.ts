@@ -12,6 +12,11 @@ interface RequestWithBody extends Request {
 
 @controller
 class LoginController {
+  static isLogin(req: RequestWithBody): boolean {
+    const isLogin = req.session ? req.session.login : false;
+    return !!isLogin;
+  }
+
   @get("/")
   index(req: RequestWithBody, res: Response) {
     return res.json(getResponseData("this is login route"));
@@ -20,7 +25,7 @@ class LoginController {
   @post("/login")
   login(req: RequestWithBody, res: Response) {
     const { password, username } = req.body;
-    const isLogin = req.session ? req.session.login : false;
+    const isLogin = LoginController.isLogin(req);
     if (isLogin) return res.json(getResponseData(true));
     if (password === "123456" && req.session) {
       req.session.login = true;
