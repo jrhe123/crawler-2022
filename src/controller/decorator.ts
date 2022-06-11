@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { RequestHandler, Router } from "express";
 export const router = Router();
 
 enum Mehod {
@@ -7,11 +7,11 @@ enum Mehod {
   put = "put",
   delete = "delete",
 }
-
 export function controller(target: any) {
   for (let key in target.prototype) {
     const path = Reflect.getMetadata("path", target.prototype, key);
     const method: Mehod = Reflect.getMetadata("method", target.prototype, key);
+    const middleware = Reflect.getMetadata("middleware", target.prototype, key);
     const handler = target.prototype[key];
     /**
      * path: "/", "/login", etc..
@@ -19,7 +19,11 @@ export function controller(target: any) {
      * handler:
      */
     if (path && method && handler) {
-      router[method](path, handler);
+      if (middleware) {
+        router[method](path, middleware, handler);
+      } else {
+        router[method](path, handler);
+      }
     }
   }
 }
@@ -37,3 +41,13 @@ export const get = getRequestDecorator("get");
 export const post = getRequestDecorator("post");
 export const put = getRequestDecorator("put");
 export const del = getRequestDecorator("delete");
+
+// ===============
+// ===============
+// ===============
+
+export function use(middleware: RequestHandler) {
+  return function (target: any, key: string) {
+    Reflect.defineMetadata("middleware", middleware, target, key);
+  };
+}

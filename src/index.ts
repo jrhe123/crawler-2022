@@ -1,14 +1,16 @@
 import express, { Request, Response, NextFunction } from "express";
-import bodyParser from "body-parser";
 import cookieSession from "cookie-session";
+// controllers
 import "./controller/loginController";
+import "./controller/crawlerController";
+// router
 import { router } from "./controller/decorator";
 
 const app = express();
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.json());
 app.use((req: Request, res: Response, next: NextFunction) => {
   // declared in custom.d.ts
-  req.username = "this is custom props";
+  req.body.username = "this is custom props";
   next();
 });
 app.use(
