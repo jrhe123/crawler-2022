@@ -25,16 +25,20 @@ const checkLogin = (req: Request, res: Response, next: NextFunction) => {
     return res.json(getResponseData(false, "Not authorized"));
   }
 };
+const dummyMiddleware = (req: Request, res: Response, next: NextFunction) => {
+  next();
+};
 
-@controller("/")
+@controller("/crawler")
 export class CrawlerController {
-  @get("/test")
+  @get("/")
   @use(checkLogin)
+  @use(dummyMiddleware)
   index(req: RequestWithBody, res: Response) {
     return res.json(getResponseData("this is my protected route"));
   }
 
-  @post("/crawl")
+  @post("/")
   @use(checkLogin)
   crawl(req: RequestWithBody, res: Response) {
     const secret = "this is my super secret";
