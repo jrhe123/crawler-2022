@@ -2,7 +2,7 @@ import path from "path";
 import "reflect-metadata";
 import { Request, Response, NextFunction } from "express";
 //
-import { controller, get, post, use } from "./decorator";
+import { controller, use, get, post } from "../decorator";
 import { getResponseData } from "../utils/util";
 //
 import Crawler from "../utils/crawler";

@@ -4,7 +4,7 @@ import cookieSession from "cookie-session";
 import "./controller/loginController";
 import "./controller/crawlerController";
 // router
-import { router } from "./controller/decorator";
+import { router } from "./router";
 
 const app = express();
 app.use(express.json());
