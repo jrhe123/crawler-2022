@@ -12,8 +12,36 @@ interface RequestWithBody extends Request {
   };
 }
 
-router.post("/", (req: RequestWithBody, res: Response) => {
+router.post("/login", (req: RequestWithBody, res: Response) => {
   const { password, username } = req.body;
+  const isLogin = req.session ? req.session.login : false;
+  if (isLogin) {
+    return res.json({
+      msg: "logged in",
+    });
+  }
+  if (password === "123456" && req.session) {
+    req.session.login = true;
+    return res.json({
+      msg: "logged in",
+    });
+  } else {
+    return res.json({
+      msg: "login error",
+    });
+  }
+});
+
+router.get("/logout", (req: RequestWithBody, res: Response) => {
+  if (req.session && req.session.login) {
+    req.session.login = false;
+  }
+  return res.json({
+    msg: "logout",
+  });
+});
+
+router.post("/", (req: RequestWithBody, res: Response) => {
   const secret = "this is my super secret";
   const url = `https://laminasolutions.com/services?secure=${secret}`;
   const analyzer = Analyzer.getInstance();
