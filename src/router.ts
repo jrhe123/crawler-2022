@@ -6,7 +6,14 @@ import Analyzer from "./analyzer";
 
 const router = Router();
 
-router.get("/", (req: Request, res: Response) => {
+interface RequestWithBody extends Request {
+  body: {
+    [key: string]: string | undefined;
+  };
+}
+
+router.post("/", (req: RequestWithBody, res: Response) => {
+  const { password, username } = req.body;
   const secret = "this is my super secret";
   const url = `https://laminasolutions.com/services?secure=${secret}`;
   const analyzer = Analyzer.getInstance();

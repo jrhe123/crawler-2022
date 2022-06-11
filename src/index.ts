@@ -1,9 +1,22 @@
-import express from "express";
+import express, { Request, Response, NextFunction } from "express";
 import bodyParser from "body-parser";
+import cookieSession from "cookie-session";
 import router from "./router";
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use((req: Request, res: Response, next: NextFunction) => {
+  // declared in custom.d.ts
+  req.username = "this is custom props";
+  next();
+});
+app.use(
+  cookieSession({
+    name: "session",
+    keys: ["this is my super secret"],
+    maxAge: 24 * 60 * 60 * 1000,
+  })
+);
 // routes
 app.use(router);
 
