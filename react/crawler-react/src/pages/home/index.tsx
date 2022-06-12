@@ -15,6 +15,12 @@ const Home: React.FC = () => {
     });
   }, []);
 
+  const handleLogout = () => {
+    axios.get("/logout").then((res) => {
+      setIsLogin(false);
+    });
+  };
+
   if (!isLoaded) return null;
 
   if (!isLogin) {
@@ -23,9 +29,15 @@ const Home: React.FC = () => {
 
   return (
     <div className="home-page">
-      <Button type="primary">crawler</Button>
-      <Button type="primary">display</Button>
-      <Button type="primary">exit</Button>
+      <Button type="primary" style={{ marginRight: 12 }}>
+        crawler
+      </Button>
+      <Button type="primary" style={{ marginRight: 12 }}>
+        display
+      </Button>
+      <Button type="primary" onClick={handleLogout}>
+        exit
+      </Button>
     </div>
   );
 };
