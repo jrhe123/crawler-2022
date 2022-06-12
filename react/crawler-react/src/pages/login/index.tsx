@@ -2,14 +2,14 @@ import { Button, Form, Input } from "antd";
 import React, { useState } from "react";
 import { Navigate } from "react-router";
 import "./style.css";
-import axios from "axios";
+import request from "../../request";
 import qs from "qs";
 
 const Login: React.FC = () => {
   const [isLogin, setIsLogin] = useState<boolean>(false);
 
   const onFinish = (values: { username: string; password: string }) => {
-    axios
+    request
       .post(
         "/login",
         qs.stringify({
@@ -22,8 +22,8 @@ const Login: React.FC = () => {
         }
       )
       .then((res) => {
-        if (res.data?.data) {
-          setIsLogin(res.data.data);
+        if (res.data) {
+          setIsLogin(res.data);
         }
       });
   };

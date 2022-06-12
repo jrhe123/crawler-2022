@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Navigate } from "react-router";
 import ReactEcharts from "echarts-for-react";
 import "./style.css";
-import axios from "axios";
+import request from "../../request";
 import moment from "moment";
 import { EChartOption } from "echarts";
 
@@ -41,31 +41,32 @@ const Home: React.FC = () => {
   });
 
   useEffect(() => {
-    axios.get("/isLogin").then((res) => {
-      setIsLogin(res.data.data);
+    request.get("/isLogin").then((res) => {
+      setIsLogin(res.data);
       setIsLoaded(true);
     });
 
-    axios.get("/crawler").then((res) => {
-      if (res.data?.data) {
+    request.get("/crawler").then((res) => {
+      if (res.data) {
         const courseNames: string[] = [];
         const times: string[] = [];
         const tempData: {
           [key: string]: number[];
         } = {};
         // format data
-        const data: Data = res.data.data;
+        const data: Data = res.data;
         for (let i in data) {
           const item = data[i];
           times.push(moment(Number(i)).format("MM-DD HH:mm"));
           //
           item.forEach((item2) => {
-            if (courseNames.indexOf(item2.title) === -1) {
-              courseNames.push(item2.title);
+            const { title, count } = item2;
+            if (courseNames.indexOf(title) === -1) {
+              courseNames.push(title);
             }
-            tempData[item2.title]
-              ? tempData[item2.title].push(item2.count)
-              : (tempData[item2.title] = [item2.count]);
+            tempData[title]
+              ? tempData[title].push(count)
+              : (tempData[title] = [count]);
           });
           //
           const result: EChartOption.Series[] = [];
@@ -97,13 +98,13 @@ const Home: React.FC = () => {
   }, []);
 
   const handleCrawler = () => {
-    axios.post("/crawler").then((res) => {
+    request.post("/crawler").then((res) => {
       console.log("crawler res: ", res);
     });
   };
 
   const handleLogout = () => {
-    axios.get("/logout").then((res) => {
+    request.get("/logout").then((res) => {
       setIsLogin(false);
     });
   };
