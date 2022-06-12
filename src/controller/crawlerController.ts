@@ -1,3 +1,4 @@
+import fs from "fs";
 import path from "path";
 import "reflect-metadata";
 import { Request, Response, NextFunction } from "express";
@@ -35,7 +36,12 @@ export class CrawlerController {
   @use(checkLogin)
   @use(dummyMiddleware)
   index(req: RequestWithBody, res: Response) {
-    return res.json(getResponseData("this is my protected route"));
+    let result = fs.readFileSync(
+      path.resolve(__dirname, "../../data/course.json"),
+      "utf8"
+    );
+    result = JSON.parse(result);
+    return res.json(getResponseData(result));
   }
 
   @post("/")
