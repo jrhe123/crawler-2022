@@ -15,6 +15,15 @@ interface RequestWithBody extends Request {
   };
 }
 
+interface Item {
+  title: string;
+  count: number;
+}
+
+interface Data {
+  [key: string]: Item[];
+}
+
 /**
  * Middleware: check login or not
  */
@@ -36,12 +45,12 @@ export class CrawlerController {
   @use(checkLogin)
   @use(dummyMiddleware)
   index(req: RequestWithBody, res: Response) {
-    let result = fs.readFileSync(
+    const result = fs.readFileSync(
       path.resolve(__dirname, "../../data/course.json"),
       "utf8"
     );
-    result = JSON.parse(result);
-    return res.json(getResponseData(result));
+    const formatted = JSON.parse(result);
+    return res.json(getResponseData<Data>(formatted));
   }
 
   @post("/")
@@ -55,6 +64,6 @@ export class CrawlerController {
       analyzer,
       path.resolve(__dirname, "../../data/course.json")
     );
-    return res.json(getResponseData(true));
+    return res.json(getResponseData<boolean>(true));
   }
 }
