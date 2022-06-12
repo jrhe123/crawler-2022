@@ -22,8 +22,9 @@ const Login: React.FC = () => {
         }
       )
       .then((res) => {
-        if (res.data) {
-          setIsLogin(res.data);
+        const data: responseResult.login = res.data;
+        if (data) {
+          setIsLogin(data);
         }
       });
   };

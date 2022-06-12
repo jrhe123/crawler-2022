@@ -19,13 +19,15 @@ export class LoginController {
 
   @get("/")
   index(req: RequestWithBody, res: Response) {
-    return res.json(getResponseData<string>("this is login route"));
+    return res.json(
+      getResponseData<responseResult.index>("this is login route")
+    );
   }
 
   @get("/isLogin")
   isLogin(req: RequestWithBody, res: Response) {
     const isLogin = LoginController.isLogin(req);
-    return res.json(getResponseData<boolean>(isLogin));
+    return res.json(getResponseData<responseResult.isLogin>(isLogin));
   }
 
   @post("/login")
@@ -35,9 +37,11 @@ export class LoginController {
     if (isLogin) return res.json(getResponseData(true));
     if (password === "123456" && req.session) {
       req.session.login = true;
-      return res.json(getResponseData<boolean>(true));
+      return res.json(getResponseData<responseResult.login>(true));
     } else {
-      return res.json(getResponseData<boolean>(false, "login error"));
+      return res.json(
+        getResponseData<responseResult.login>(false, "login error")
+      );
     }
   }
 
@@ -46,6 +50,6 @@ export class LoginController {
     if (req.session && req.session.login) {
       req.session.login = false;
     }
-    return res.json(getResponseData<boolean>(true));
+    return res.json(getResponseData<responseResult.logout>(true));
   }
 }

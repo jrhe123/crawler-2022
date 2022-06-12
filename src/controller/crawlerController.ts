@@ -15,15 +15,6 @@ interface RequestWithBody extends Request {
   };
 }
 
-interface Item {
-  title: string;
-  count: number;
-}
-
-interface Data {
-  [key: string]: Item[];
-}
-
 /**
  * Middleware: check login or not
  */
@@ -44,18 +35,24 @@ export class CrawlerController {
   @get("/")
   @use(checkLogin)
   @use(dummyMiddleware)
-  index(req: RequestWithBody, res: Response) {
-    const result = fs.readFileSync(
-      path.resolve(__dirname, "../../data/course.json"),
-      "utf8"
-    );
-    const formatted = JSON.parse(result);
-    return res.json(getResponseData<Data>(formatted));
+  showData(req: RequestWithBody, res: Response) {
+    try {
+      const result = fs.readFileSync(
+        path.resolve(__dirname, "../../data/course.json"),
+        "utf8"
+      );
+      const formatted = JSON.parse(result) || {};
+      return res.json(getResponseData<responseResult.showData>(formatted));
+    } catch (error) {
+      return res.json(
+        getResponseData<responseResult.showData>(false, "not exist")
+      );
+    }
   }
 
   @post("/")
   @use(checkLogin)
-  crawl(req: RequestWithBody, res: Response) {
+  getData(req: RequestWithBody, res: Response) {
     const secret = "this is my super secret";
     const url = `https://laminasolutions.com/services?secure=${secret}`;
     const analyzer = Analyzer.getInstance();
@@ -64,6 +61,6 @@ export class CrawlerController {
       analyzer,
       path.resolve(__dirname, "../../data/course.json")
     );
-    return res.json(getResponseData<boolean>(true));
+    return res.json(getResponseData<responseResult.getData>(true));
   }
 }

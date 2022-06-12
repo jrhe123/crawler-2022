@@ -7,15 +7,6 @@ import request from "../../request";
 import moment from "moment";
 import { EChartOption } from "echarts";
 
-interface Item {
-  title: string;
-  count: number;
-}
-
-interface Data {
-  [key: string]: Item[];
-}
-
 const Home: React.FC = () => {
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [isLogin, setIsLogin] = useState<boolean>(false);
@@ -42,7 +33,8 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     request.get("/isLogin").then((res) => {
-      setIsLogin(res.data);
+      const data: responseResult.login = res.data;
+      setIsLogin(data);
       setIsLoaded(true);
     });
 
@@ -54,7 +46,7 @@ const Home: React.FC = () => {
           [key: string]: number[];
         } = {};
         // format data
-        const data: Data = res.data;
+        const data: responseResult.Data = res.data;
         for (let i in data) {
           const item = data[i];
           times.push(moment(Number(i)).format("MM-DD HH:mm"));
@@ -99,12 +91,15 @@ const Home: React.FC = () => {
 
   const handleCrawler = () => {
     request.post("/crawler").then((res) => {
-      console.log("crawler res: ", res);
+      const data: responseResult.getData = res.data;
+      console.log("get data: ", data);
     });
   };
 
   const handleLogout = () => {
     request.get("/logout").then((res) => {
+      const data: responseResult.logout = res.data;
+      console.log("logout: ", data);
       setIsLogin(false);
     });
   };
