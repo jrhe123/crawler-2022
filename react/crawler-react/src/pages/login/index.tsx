@@ -1,12 +1,36 @@
 import { Button, Form, Input } from "antd";
-import React from "react";
+import React, { useState } from "react";
+import { Navigate } from "react-router";
 import "./style.css";
+import axios from "axios";
+import qs from "qs";
 
 const Login: React.FC = () => {
+  const [isLogin, setIsLogin] = useState<boolean>(false);
+
   const onFinish = (values: { username: string; password: string }) => {
-    console.log("Success:", values.username);
-    console.log("Success:", values.password);
+    axios
+      .post(
+        "/login",
+        qs.stringify({
+          password: values.password,
+        }),
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        }
+      )
+      .then((res) => {
+        if (res.data?.data) {
+          setIsLogin(res.data.data);
+        }
+      });
   };
+
+  if (isLogin) {
+    return <Navigate to={"/"} />;
+  }
 
   return (
     <div className="login-page">
@@ -18,13 +42,6 @@ const Login: React.FC = () => {
         onFinish={onFinish}
         autoComplete="off"
       >
-        <Form.Item
-          label="Username"
-          name="username"
-          rules={[{ required: true, message: "Please input your username!" }]}
-        >
-          <Input />
-        </Form.Item>
         <Form.Item
           label="Password"
           name="password"

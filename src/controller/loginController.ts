@@ -22,12 +22,20 @@ export class LoginController {
     return res.json(getResponseData("this is login route"));
   }
 
+  @get("/isLogin")
+  isLogin(req: RequestWithBody, res: Response) {
+    const isLogin = LoginController.isLogin(req);
+    console.log("check session: ", isLogin);
+    return res.json(getResponseData(isLogin));
+  }
+
   @post("/login")
   login(req: RequestWithBody, res: Response) {
     const { password, username } = req.body;
     const isLogin = LoginController.isLogin(req);
     if (isLogin) return res.json(getResponseData(true));
     if (password === "123456" && req.session) {
+      console.log("set session to true");
       req.session.login = true;
       return res.json(getResponseData(true));
     } else {

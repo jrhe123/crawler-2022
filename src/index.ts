@@ -8,6 +8,7 @@ import { router } from "./router";
 
 const app = express();
 app.use(express.json());
+app.use(express.urlencoded());
 app.use((req: Request, res: Response, next: NextFunction) => {
   // declared in custom.d.ts
   req.body.username = "this is custom props";
