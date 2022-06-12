@@ -9,11 +9,11 @@ declare namespace responseResult {
   }
 
   //
-  export type index = string;
-  export type isLogin = boolean;
-  export type login = boolean;
-  export type logout = boolean;
+  type index = string;
+  type isLogin = boolean;
+  type login = boolean;
+  type logout = boolean;
   //
-  export type getData = boolean;
-  export type showData = Data | boolean;
+  type getData = boolean;
+  type showData = Data | boolean;
 }
