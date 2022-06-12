@@ -4,7 +4,17 @@ import { Navigate } from "react-router";
 import ReactEcharts from "echarts-for-react";
 import "./style.css";
 import axios from "axios";
+import moment from "moment";
 import { EChartOption } from "echarts";
+
+interface Item {
+  title: string;
+  count: number;
+}
+
+interface Data {
+  [key: string]: Item[];
+}
 
 const Home: React.FC = () => {
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
@@ -35,6 +45,55 @@ const Home: React.FC = () => {
       setIsLogin(res.data.data);
       setIsLoaded(true);
     });
+
+    axios.get("/crawler").then((res) => {
+      if (res.data?.data) {
+        const courseNames: string[] = [];
+        const times: string[] = [];
+        const tempData: {
+          [key: string]: number[];
+        } = {};
+        // format data
+        const data: Data = res.data.data;
+        for (let i in data) {
+          const item = data[i];
+          times.push(moment(Number(i)).format("MM-DD HH:mm"));
+          //
+          item.forEach((item2) => {
+            if (courseNames.indexOf(item2.title) === -1) {
+              courseNames.push(item2.title);
+            }
+            tempData[item2.title]
+              ? tempData[item2.title].push(item2.count)
+              : (tempData[item2.title] = [item2.count]);
+          });
+          //
+          const result: EChartOption.Series[] = [];
+          for (let i in tempData) {
+            result.push({
+              name: i,
+              type: "line",
+              data: tempData[i],
+            });
+          }
+          //
+          setOption({
+            grid: { top: 8, right: 8, bottom: 24, left: 36 },
+            xAxis: {
+              type: "category",
+              data: courseNames,
+            },
+            yAxis: {
+              type: "value",
+            },
+            series: result,
+            tooltip: {
+              trigger: "axis",
+            },
+          });
+        }
+      }
+    });
   }, []);
 
   const handleCrawler = () => {
@@ -56,19 +115,21 @@ const Home: React.FC = () => {
   }
 
   return (
-    <div className="home-page">
-      <Button
-        type="primary"
-        style={{ marginRight: 12 }}
-        onClick={handleCrawler}
-      >
-        crawler
-      </Button>
-      <Button type="primary" onClick={handleLogout}>
-        exit
-      </Button>
+    <>
+      <div className="home-page">
+        <Button
+          type="primary"
+          style={{ marginRight: 12 }}
+          onClick={handleCrawler}
+        >
+          crawler
+        </Button>
+        <Button type="primary" onClick={handleLogout}>
+          exit
+        </Button>
+      </div>
       <ReactEcharts option={option} />
-    </div>
+    </>
   );
 };
 
