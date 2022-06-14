@@ -8,6 +8,9 @@ import { getResponseData } from "../utils/util";
 //
 import Crawler from "../utils/crawler";
 import Analyzer from "../utils/analyzer";
+// DB
+import { prepareConnection } from "../db";
+import { User } from "../entity";
 
 interface RequestWithBody extends Request {
   body: {
@@ -62,5 +65,16 @@ export class CrawlerController {
       path.resolve(__dirname, "../../data/course.json")
     );
     return res.json(getResponseData<responseResult.getData>(true));
+  }
+
+  @get("/test")
+  async test(req: RequestWithBody, res: Response) {
+    const db = await prepareConnection();
+    const userRepo = db.getRepository(User);
+    const user = userRepo.findOneBy({
+      userGUID: "309559A9-3FA0-4241-95ED-D577A1D27248",
+    });
+    console.log("user: ", user);
+    return res.json(getResponseData<string>("hit here"));
   }
 }
